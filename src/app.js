@@ -5,7 +5,7 @@ const morgan = ("morgan")
 
 require("dotenv").config();
 const PORT = process.env.PORT || 3306;
-mongoose.connect(process.env.MONGO_URL);
+mongoose.connect(process.env.MONGO_URI);
 const cors = require("cors");
 const app = express();
 app.use(express.json());

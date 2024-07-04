@@ -1,16 +1,14 @@
-// const customer = require("./customer")
-// const express = require("express")
-
-// const routerMain = express.Router()
-
-// routerMain.use("/customer", customer)
-
-// module.exports = routerMain;
+const express =require("express")
 
 const customer = require("./customer")
-const express =require("express")
+const claims = require("./claim.route")
+const users = require("./users.route")
+
 const router = express.Router()
 
 
-router.use("/customer", customer)
+router.use("/customers", customer)
+router.use("/claims", claims)
+router.use("/users", users)
+
 module.exports  = router
