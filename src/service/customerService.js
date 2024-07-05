@@ -8,6 +8,10 @@ async function createCustomer(cus) {
   cus.password = password
   return await customerModel.create(cus);
 }
+async function getCustomers() {
+  return await customerModel.find();
+}
+
 
 async function login(email, passsword) {
   const matches = await customerModel.find({ email: email });
@@ -20,4 +24,4 @@ async function login(email, passsword) {
     return "Invalid email/password";
   }
 }
-module.exports = { createCustomer, login };
+module.exports = { createCustomer, login,getCustomers};

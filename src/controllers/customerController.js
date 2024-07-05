@@ -27,8 +27,17 @@ async function loginCustomer(req, res) {
     res.status(500).json({ error: error.message });
   }
 }
+const getAllCustomers = async (req, res) => {
+  try {
+    const customers = await customerService.getCustomers();
+    res.status(200).json(customers);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 
 module.exports = {
   createCustomer,
   loginCustomer,
+  getAllCustomers
 };
