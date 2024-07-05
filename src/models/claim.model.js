@@ -2,13 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const claimSchema = new Schema({
-  policyNumber: { type: String, required: true },
-  claimant: {
-    name: { type: String, required: true },
-    address: { type: String, required: true },
-    phone: { type: String, required: true },
-    email: { type: String, required: true },
-  },
+  customerId: { type: Schema.Types.ObjectId, ref: 'Customer', required: true },
   incidentDetails: {
     date: { type: Date, required: true },
     time: { type: String, required: true },
@@ -75,8 +69,8 @@ const claimSchema = new Schema({
   },
   status: {
     type: String,
-    enum: ['Pending', 'Approved', 'Rejected'],
-    default: 'Pending'
+    enum: ['pending', 'approved', 'rejected'],
+    default: 'pending'
   }
 }, { timestamps: true });
 

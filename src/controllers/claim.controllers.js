@@ -23,6 +23,19 @@ const getClaims = async (req, res) => {
   }
 };
 
+// Get all claims for specific customer
+const getClaimsByCustomer = async (req, res) => {
+  const customerId = req.params.customerId;
+
+  try {
+    const claims = await Claim.find({ customerId: customerId }).populate('customerId');
+    res.status(200).json(claims);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+
 // Approve a claim
  const approveClaim = async (req, res) => {
   try {
@@ -89,6 +102,7 @@ module.exports = {
     approveClaim,
     deleteClaim,
     rejectClaim,
-    getClaimById
+    getClaimById,
+    getClaimsByCustomer
 
   };
