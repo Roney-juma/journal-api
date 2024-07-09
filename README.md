@@ -23,22 +23,23 @@ The application will run on https://journal-api-8xkw.onrender.com/v1.
 The project is structured as follows:
 
     `` \
-src/
-│
-├── models/
-│   ├── Category.js
-│   └── Journal.js
-│
-├── controller/
-│   ├── Category.js
-│   └── Journal.js
-│
-├── routes/
-│   ├── category.js
-│   └── journal.js
-│
-├── app.js
-└── package.json ``
+        src/
+        │
+        ├── models/
+        │   ├── Category.js
+        │   └── Journal.js
+        │
+        ├── controller/
+        │   ├── Category.js
+        │   └── Journal.js
+        │
+        ├── routes/
+        │   ├── category.js
+        │   └── journal.js
+        │
+        ├── app.js
+        └── package.
+    ``
 
 Base URL: https://journal-api-8xkw.onrender.com/v1
 
