@@ -1,63 +1,91 @@
-const catchAsync = require('../utils/catchAsync');
-const httpStatus = require('http-status');
-const { userService } = require('../services');
+const express = require('express');
+const User = require('../models/users.model');
 
+// Create a new admin user
+const createUser = async (req, res) => {
+  try {
+    const { username, password, fullName, email, role } = req.body;
+    const newAdminUser = new User({
+      username,
+      password, // Remember to hash this password before saving!
+      fullName,
+      email,
+      role
+    });
+    const savedAdminUser = await newAdminUser.save();
+    res.status(201).json(savedAdminUser);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
 
+const loginUser = async (req, res)=> {
+  try {
+    const password = req.body.password
+    const email = req.body.email
 
-const createUser = catchAsync(async (req, res) => {
-    const user = await userService.createUser(req.body);
-    res.status(httpStatus.CREATED).json({ success: true, message: 'Success', data: user })
-});
+    const user = await customerService.login(email, password);
+    console.log("user",user)
+    res.status(200).json(user)
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
 
-const getUsers = catchAsync(async (req, res) => {
-    const users = await userService.getAllUsersErp()
-    res.status(httpStatus.OK).json({ success: true, message: 'Success', data: user })
-});
+// Get all users
+const getAllUsers = async (req, res) => {
+  try {
+    const adminUsers = await User.find();
+    res.status(200).json(adminUsers);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 
-const getUser = catchAsync(async (req, res) => {
-    try {
-        const user = await userService.getUserErp(token, req.params.userId)
-        res.status(httpStatus.OK).json({ success: true, message: 'Success', data: user })
-    } catch (error) {
-        res.status(500).json({ message: 'Server side error' });
+// Get a specific admin user
+const getAdminUser = async (req, res) => {
+  try {
+    const adminUser = await User.findById(req.params.id);
+    if (!adminUser) {
+      return res.status(404).json({ message: 'Admin user not found' });
     }
+    res.status(200).json(adminUser);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 
-});
-
-const updateUser = catchAsync(async (req, res) => {
-    const user = await userService.updateUserById(req.params.userId, req.body);
-    res.status(httpStatus.OK).json({ success: true, message: 'Success', data: user })
-});
-
-const deleteUser = catchAsync(async (req, res) => {
-    const dltUser = await userService.deleteUserById(req.params.userId);
-    res.status(httpStatus.OK).json({ success: true, message: 'Success', data: dltUser })
-});
-
-const getAllUsers = catchAsync(async (req, res) => {
-    try {
-        const data = await userService.getAllUsers(req.query);
-        res.status(httpStatus.OK).json({ success: true, ...data })
-    } catch (error) {
-        res.status(httpStatus.BAD_REQUEST).json({ success: false, message: error?.message, data: error });
+// Update an admin user
+const updateAdminUser = async (req, res) => {
+  try {
+    const updatedAdminUser = await User.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (!updatedAdminUser) {
+      return res.status(404).json({ message: 'Admin user not found' });
     }
-})
+    res.status(200).json(updatedAdminUser);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
 
-const getApprovalAdmins = catchAsync(async (req, res) => {
-    try {
-        const data = await userService.getApprovalManagers();
-        res.status(httpStatus.OK).json({ success: true, message: data?.message, data: data?.data })
-    } catch (error) {
-        res.status(httpStatus.BAD_REQUEST).json({ success: false, message: error?.message, data: error });
+// Delete an admin user
+const deleteAdminUser = async (req, res) => {
+  try {
+    const deletedAdminUser = await User.findByIdAndDelete(req.params.id);
+    if (!deletedAdminUser) {
+      return res.status(404).json({ message: 'Admin user not found' });
     }
-})
+    res.status(200).json({ message: 'Admin user deleted' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
-    getToken,
     createUser,
-    getUsers,
-    getUser,
-    updateUser,
-    deleteUser,
+    loginUser,
     getAllUsers,
-    getApprovalAdmins
+    getAdminUser,
+    updateAdminUser,
+    deleteAdminUser
 };
