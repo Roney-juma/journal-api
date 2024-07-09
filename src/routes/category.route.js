@@ -7,8 +7,8 @@ const router = express.Router();
 
 
 router.get('/',categoryController.getCategory)
-router.get('/create',categoryController.createCategory)
-router.get('/update/:id',categoryController.updateCategory)
-router.get('/delete/:id',categoryController.deleteCategory)
+router.post('/create',categoryController.createCategory)
+router.patch('/update/:id',categoryController.updateCategory)
+router.delete('/delete/:id',categoryController.deleteCategory)
 
 module.exports = router;
