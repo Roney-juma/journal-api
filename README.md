@@ -20,6 +20,8 @@ The application will run on http://localhost:3306.
 
 #### Project Structure
 The project is structured as follows:
+
+` \
 journal-app/
 │
 ├── models/
@@ -35,4 +37,4 @@ journal-app/
 │   └── journal.js
 │
 ├── app.js
-└── package.json
+└── package.json `
