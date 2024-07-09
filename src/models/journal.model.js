@@ -1,3 +1,4 @@
+// models/Journal.js
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
@@ -18,7 +19,12 @@ const journalSchema = new Schema({
     mood: {
         type: String,
         enum: ['Happy', 'Sad', 'Neutral', 'Excited', 'Angry'],
-    }
+    },
+    category: {
+        type: Schema.Types.ObjectId,
+        ref: 'Category',
+        required: true,
+    },
 });
 
 const Journal = mongoose.model('Journal', journalSchema);

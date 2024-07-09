@@ -1,9 +1,10 @@
 const Journal = require('../models/journal.model');
+const Category = require('../models/categories.model');
 
 // Get all journal entries
 const getJournals = async (req, res) => {
     try {
-        const journals = await Journal.find();
+        const journals = await Journal.find().populate('category');
         res.json(journals);
     } catch (err) {
         res.status(500).json({ message: err.message });
@@ -13,7 +14,7 @@ const getJournals = async (req, res) => {
 // Get a single journal entry by ID
 const getJournalById = async (req, res) => {
     try {
-        const journal = await Journal.findById(req.params.id);
+        const journal = await Journal.findById(req.params.id).populate('category');
         if (journal == null) {
             return res.status(404).json({ message: 'Cannot find journal entry' });
         }
@@ -25,13 +26,20 @@ const getJournalById = async (req, res) => {
 
 // Create a new journal entry
 const createJournal = async (req, res) => {
-    const journal = new Journal({
-        title: req.body.title,
-        content: req.body.content,
-        tags: req.body.tags,
-        mood: req.body.mood,
-    });
     try {
+        const category = await Category.findById(req.body.category);
+        if (!category) {
+            return res.status(400).json({ message: 'Invalid category' });
+        }
+
+        const journal = new Journal({
+            title: req.body.title,
+            content: req.body.content,
+            tags: req.body.tags,
+            mood: req.body.mood,
+            category: req.body.category,
+        });
+
         const newJournal = await journal.save();
         res.status(201).json(newJournal);
     } catch (err) {
@@ -58,6 +66,13 @@ const updateJournal = async (req, res) => {
         }
         if (req.body.mood != null) {
             journal.mood = req.body.mood;
+        }
+        if (req.body.category != null) {
+            const category = await Category.findById(req.body.category);
+            if (!category) {
+                return res.status(400).json({ message: 'Invalid category' });
+            }
+            journal.category = req.body.category;
         }
 
         const updatedJournal = await journal.save();

@@ -1,14 +1,14 @@
 const express =require("express")
 
-const customer = require("./customer")
-const claims = require("./claim.route")
+const categories = require("./category.route")
+const journal = require("./journal.route")
 const users = require("./users.route")
 
 const router = express.Router()
 
 
-router.use("/customers", customer)
-router.use("/claims", claims)
+router.use("/category", categories)
+router.use("/journal", journal)
 router.use("/users", users)
 
 module.exports  = router
