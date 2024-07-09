@@ -42,8 +42,8 @@ src/
 
 Base URL: https://journal-api-8xkw.onrender.com/v1
 
-### Endpoints
-User Authentication
+## Endpoints
+### User Authentication
 1. Signup
 Endpoint: POST /v1/users/signup
 
@@ -61,3 +61,32 @@ Description: Authenticate an existing user and generate a JWT token.
 Endpoint: POST /v1/categories
 
 Description: Create a new category. Requires authentication.
+
+### Journals
+4. Create Journal
+Endpoint: POST /v1/journals
+
+Description: Create a new journal entry. Requires authentication.
+
+
+5. Get All Journals
+Endpoint: GET /v1/journals
+
+Description: Retrieve all journal entries for the authenticated user. Requires authentication.
+
+6. Get Journal by ID
+Endpoint: GET /v1/journals/:id
+
+Description: Retrieve a specific journal entry by ID. Requires authentication.
+
+7. Update Journal
+Endpoint: PUT /v1/journals/:id
+
+Description: Update an existing journal entry by ID. Requires authentication.
+
+8. Delete Journal
+Endpoint: DELETE /v1/journals/:id
+
+Description: Delete a specific journal entry by ID. Requires authentication.
+
+
