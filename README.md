@@ -13,16 +13,17 @@ Install dependencies:
 npm install
 
 #### Starting the Application
-Ensure MongoDB is running.
 Start the application:
+
 node src/app.js
-The application will run on http://localhost:3306.
+
+The application will run on https://journal-api-8xkw.onrender.com/v1.
 
 #### Project Structure
 The project is structured as follows:
 
-` \
-journal-app/
+    `` \
+src/
 │
 ├── models/
 │   ├── Category.js
@@ -37,4 +38,26 @@ journal-app/
 │   └── journal.js
 │
 ├── app.js
-└── package.json `
+└── package.json ``
+
+Base URL: https://journal-api-8xkw.onrender.com/v1
+
+### Endpoints
+User Authentication
+1. Signup
+Endpoint: POST /v1/users/signup
+
+Description: Register a new user.
+
+2. Login
+Endpoint: POST /v1/users/login
+
+Description: Authenticate an existing user and generate a JWT token.
+
+### Categories
+
+3. Create Category
+
+Endpoint: POST /v1/categories
+
+Description: Create a new category. Requires authentication.
