@@ -16,24 +16,13 @@ const usersSchema = new mongoose.Schema({
         type: String, 
         required: true, 
         unique: true },
-    role: {
-        type: String,
-        enum: ['admin', 'manager', 'staff'],
-        default: 'staff'
-    },
     phone: { 
-        type: String },
-    department: { 
-        type: String },
-    position: { 
         type: String },
     active: { 
         type: Boolean, 
         default: true },
     lastLogin: { 
         type: Date },
-    permissions: { 
-        type: Schema.Types.Mixed },
     profilePictureUrl: { 
         type: String },
     createdAt: { 
