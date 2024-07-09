@@ -1,91 +1,72 @@
-const express = require('express');
 const User = require('../models/users.model');
+const jwt = require('jsonwebtoken');
 
-// Create a new admin user
-const createUser = async (req, res) => {
+const generateToken = (id) => {
+  return jwt.sign({ id }, process.env.JWT_SECRET, {
+    expiresIn: '30d',
+  });
+};
+
+// Register User
+const registerUser = async (req, res) => {
+  const { username, email, password } = req.body;
+
   try {
-    const { username, password, fullName, email, role } = req.body;
-    const newAdminUser = new User({
+    const userExists = await User.findOne({ email });
+
+    if (userExists) {
+      return res.status(400).json({ message: 'User already exists' });
+    }
+
+    const user = await User.create({
       username,
-      password, // Remember to hash this password before saving!
-      fullName,
       email,
-      role
+      password,
     });
-    const savedAdminUser = await newAdminUser.save();
-    res.status(201).json(savedAdminUser);
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-};
 
-const loginUser = async (req, res)=> {
-  try {
-    const password = req.body.password
-    const email = req.body.email
-
-    const user = await customerService.login(email, password);
-    console.log("user",user)
-    res.status(200).json(user)
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-}
-
-// Get all users
-const getAllUsers = async (req, res) => {
-  try {
-    const adminUsers = await User.find();
-    res.status(200).json(adminUsers);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
-
-// Get a specific admin user
-const getAdminUser = async (req, res) => {
-  try {
-    const adminUser = await User.findById(req.params.id);
-    if (!adminUser) {
-      return res.status(404).json({ message: 'Admin user not found' });
+    if (user) {
+      res.status(201).json({
+        _id: user._id,
+        username: user.username,
+        email: user.email,
+        token: generateToken(user._id),
+      });
+    } else {
+      res.status(400).json({ message: 'Invalid user data' });
     }
-    res.status(200).json(adminUser);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
-
-// Update an admin user
-const updateAdminUser = async (req, res) => {
-  try {
-    const updatedAdminUser = await User.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    if (!updatedAdminUser) {
-      return res.status(404).json({ message: 'Admin user not found' });
+    } catch (error) {
+      res.status(500).json({ message: error.message });
     }
-    res.status(200).json(updatedAdminUser);
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-};
+    };
 
-// Delete an admin user
-const deleteAdminUser = async (req, res) => {
+    // Login User
+const loginUser = async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
+  const { email, password } = req.body;
+
   try {
-    const deletedAdminUser = await User.findByIdAndDelete(req.params.id);
-    if (!deletedAdminUser) {
-      return res.status(404).json({ message: 'Admin user not found' });
+    const user = await User.findOne({ email });
+
+    if (user && (await user.matchPassword(password))) {
+      res.json({
+        _id: user._id,
+        username: user.username,
+        email: user.email,
+        token: generateToken(user._id),
+      });
+    } else {
+      res.status(401).json({ message: 'Invalid email or password' });
     }
-    res.status(200).json({ message: 'Admin user deleted' });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
 module.exports = {
-    createUser,
-    loginUser,
-    getAllUsers,
-    getAdminUser,
-    updateAdminUser,
-    deleteAdminUser
-};
+  registerUser,
+  loginUser,
+}
